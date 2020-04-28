@@ -4,6 +4,7 @@ import Ibuki.EventName.IEventName;
 import Ibuki.Service.IbukiLoggerService;
 import Ibuki.Settings;
 
+import javax.annotation.*;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,7 @@ public abstract class IbukiCommandRegister {
     public void register(ICommandInterface command) {
         for (Method commandMethod : command.getClass().getMethods()) {
             IbukiCommandAnnotation annotation = commandMethod.getAnnotation(IbukiCommandAnnotation.class);
+            if (annotation == null) { continue; }
             if (annotation.CommandName().equals("")){
                 IbukiLoggerService.PrintError(IEventName.CMD_REGISTER, null,
                         "Command Annotation [CommandName] must not NULL !");

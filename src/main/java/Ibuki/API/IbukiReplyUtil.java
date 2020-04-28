@@ -12,9 +12,9 @@ public class IbukiReplyUtil {
     public static void sendMessage(MessageCreateEvent event, boolean annotationSafe, String sendObject) {
         Mono<MessageChannel> channel = event.getMessage().getChannel().cache();
         if (isPrivate(channel) && annotationSafe) {
-            channel.ofType(PrivateChannel.class).flatMap(privateChannel -> privateChannel.createMessage(sendObject)).then(Mono.empty());
+            channel.ofType(PrivateChannel.class).flatMap(privateChannel -> privateChannel.createMessage(sendObject));
         } else {
-            channel.ofType(TextChannel.class).flatMap(textChannel -> textChannel.createMessage(sendObject)).then(Mono.empty());
+            channel.ofType(TextChannel.class).flatMap(textChannel -> textChannel.createMessage(sendObject));
         }
     }
 

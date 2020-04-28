@@ -3,6 +3,7 @@ package Ibuki.Service;
 import reactor.util.annotation.Nullable;
 
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Calendar;
 
 /**
@@ -40,5 +41,9 @@ public class IbukiLoggerService {
 
     public static void PrintError(String eventName, @Nullable String commandName, String message) {
         printlog(eventName, "! Error !", commandName, message);
+    }
+
+    public static void PrintArray(String eventName, @Nullable String commandName, String[] array) {
+        Arrays.stream(array).forEach(logArray -> printlog(eventName, "Adv. Information", commandName, logArray));
     }
 }

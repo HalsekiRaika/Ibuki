@@ -16,13 +16,22 @@ public class IbukiCommandHandler extends IbukiCommandRegister {
         client.getEventDispatcher().on(MessageCreateEvent.class).subscribe(this::MessageCreateHandler);
     }
 
+    private static String[] Args = new String[]{};
+
     private void MessageCreateHandler(final MessageCreateEvent event) {
-        String[] msgSplit = event.getMessage().toString().split(" ");
+        String[] msgSplit = event.getMessage().getContent().get().split(" ");
         String Command = msgSplit[0];
-        String[] Args = argSplitter(msgSplit, Command);
+        if (!isCommandOnly(msgSplit)) {
+            Args = argSplitter(msgSplit, Command);
+        }
         IbukiCommandScheme commandScheme = schemeHashMap.get(Command.toLowerCase());
         IbukiCommandAnnotation annotation = commandScheme.getCommandAnnotation();
         execMethod(commandScheme, event, annotation.isPrivate(), Args);
+    }
+
+    private boolean isCommandOnly(String[] target) {
+        if (target.length == 1) { return true; }
+        else { return false; }
     }
 
     private String[] argSplitter(String[] splitMsg, String removeString) {
@@ -43,8 +52,15 @@ public class IbukiCommandHandler extends IbukiCommandRegister {
         }
         if (sendObj != null) {
             try {
+                IbukiLoggerService.PrintInfo(CMD_EXECUTER, scheme.getCommandAnnotation().CommandName(), "Execute Command");
+                IbukiLoggerService.PrintArray(CMD_EXECUTER, scheme.getCommandAnnotation().CommandName(), Fix(event.getMessage().getAuthor().get().toString()));
                 IbukiReplyUtil.sendMessage(event, annotationSafe, sendObj.toString());
             } catch (Exception e) {};
         }
+    }
+
+    private static String[] Fix(String target) {
+        String[] buf = target.split(", ");
+        return buf;
     }
 }
